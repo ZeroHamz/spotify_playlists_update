@@ -11,22 +11,21 @@ type PlaylistsPageProps = {
 export const PlaylistsPage: React.FC<PlaylistsPageProps> = ({
   initialPlaylists,
 }) => {
-  // setPlaylists is intentionally unused (known bug - state is never updated)
-  const [playlists, _setPlaylists] = useState<Playlist[]>(initialPlaylists);
+  const [playlists, setPlaylists] = useState<Playlist[]>(initialPlaylists);
 
   const handleLike = async (playlistId: string) => {
     try {
       // Call mock backend function
-      await likePlaylist(playlistId, playlists);
+      const response = await likePlaylist(playlistId, playlists);
 
-      // ❌ Known issue:
-      // The response from likePlaylist is currently ignored.
-      // No call to setPlaylists is made here.
-      // As a result, the UI never reflects the updated likeCount.
-      //
-      // This is the behavior currently in production. A follow-up
-      // change will need to wire the API result into React state.
-
+      // Update the state with the new like count
+      setPlaylists((prevPlaylists) =>
+        prevPlaylists.map((playlist) =>
+          playlist.id === response.playlistId
+            ? { ...playlist, likeCount: playlist.likeCount }
+            : playlist
+        )
+      );
     } catch (error) {
       console.error("Failed to like playlist", error);
     }
