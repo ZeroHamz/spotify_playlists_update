@@ -1,5 +1,5 @@
 // src/PlaylistsPage.tsx
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import type { Playlist } from "./types";
 import { likePlaylist } from "./api/likePlaylist";
 import bannerImage from "./assets/images/banner.png";
@@ -12,20 +12,11 @@ export const PlaylistsPage: React.FC<PlaylistsPageProps> = ({
   initialPlaylists,
 }) => {
   const [playlists, setPlaylists] = useState<Playlist[]>(initialPlaylists);
-  const playlistsRef = useRef<Playlist[]>(initialPlaylists);
-
-  // Keep ref in sync with state
-  useEffect(() => {
-    playlistsRef.current = playlists;
-  }, [playlists]);
 
   const handleLike = async (playlistId: string) => {
     try {
-      // Use ref to get current state (avoids stale closure issues)
-      const currentPlaylists = playlistsRef.current;
-      
-      // Call mock backend function with current state
-      const response = await likePlaylist(playlistId, currentPlaylists);
+      // Call mock backend function
+      const response = await likePlaylist(playlistId, playlists);
 
       // Update the state with the new like count
       setPlaylists((prevPlaylists) =>
