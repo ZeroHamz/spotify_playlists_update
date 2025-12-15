@@ -22,7 +22,7 @@ export const PlaylistsPage: React.FC<PlaylistsPageProps> = ({
       setPlaylists((prevPlaylists) =>
         prevPlaylists.map((playlist) =>
           playlist.id === response.playlistId
-            ? { ...playlist, likeCount: playlist.likeCount }
+            ? { ...playlist, likeCount: response.likeCount }
             : playlist
         )
       );
